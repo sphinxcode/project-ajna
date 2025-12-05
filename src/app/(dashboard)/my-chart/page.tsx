@@ -143,7 +143,12 @@ function getActiveGates(personality: ChartActivations, design: ChartActivations)
 function getActiveChannels(chartChannels: string[]) {
   return chartChannels
     .map(channelStr => {
-      const channel = CHANNELS.find(c => c.gates === channelStr);
+      // Parse channel string (e.g., "64-47") into gates array
+      const gates = channelStr.split('-').map(Number);
+      const channel = CHANNELS.find(c =>
+        (c.gates[0] === gates[0] && c.gates[1] === gates[1]) ||
+        (c.gates[0] === gates[1] && c.gates[1] === gates[0])
+      );
       return channel;
     })
     .filter((c): c is NonNullable<typeof c> => c !== undefined);
