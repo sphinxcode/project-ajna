@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, Suspense } from 'react'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import { Button } from '@/components/ui/button'
@@ -17,7 +17,7 @@ import {
 import { signIn } from '../actions'
 import { toast } from 'sonner'
 
-export default function LoginPage() {
+function LoginForm() {
   const searchParams = useSearchParams()
   const [isLoading, setIsLoading] = useState(false)
   const redirectTo = searchParams.get('redirect')
@@ -44,16 +44,15 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-muted p-4">
-      <Card className="w-full max-w-md">
-        <CardHeader className="text-center">
-          <CardTitle className="text-2xl text-primary">Welcome Back</CardTitle>
-          <CardDescription>
-            Sign in to continue your Human Design journey
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form action={handleSubmit} className="space-y-4">
+    <Card className="w-full max-w-md">
+      <CardHeader className="text-center">
+        <CardTitle className="text-2xl text-primary">Welcome Back</CardTitle>
+        <CardDescription>
+          Sign in to continue your Human Design journey
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <form action={handleSubmit} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <Input
@@ -108,7 +107,23 @@ export default function LoginPage() {
             </Button>
           </Link>
         </CardFooter>
-      </Card>
+    </Card>
+  )
+}
+
+export default function LoginPage() {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-muted p-4">
+      <Suspense fallback={
+        <Card className="w-full max-w-md">
+          <CardHeader className="text-center">
+            <CardTitle className="text-2xl text-primary">Welcome Back</CardTitle>
+            <CardDescription>Loading...</CardDescription>
+          </CardHeader>
+        </Card>
+      }>
+        <LoginForm />
+      </Suspense>
     </div>
   )
 }
