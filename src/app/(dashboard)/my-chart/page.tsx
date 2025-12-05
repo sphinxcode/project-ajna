@@ -259,6 +259,8 @@ export default function MyChartPage() {
   if (!chart) return null;
 
   const chartData = chart.chart_data;
+  if (!chartData) return null;
+
   const personalityActivations = transformActivations(chartData.personality);
   const designActivations = transformActivations(chartData.design);
   const allGates = getActiveGates(chartData.personality, chartData.design);
@@ -376,7 +378,7 @@ export default function MyChartPage() {
               <BodyGraphHDKit
                 personalityActivations={personalityActivations}
                 designActivations={designActivations}
-                activationsToShow="both"
+                activationsToShow="all"
               />
               <div className="flex items-center justify-center gap-6 mt-4 text-sm">
                 <div className="flex items-center gap-2">
@@ -630,19 +632,19 @@ export default function MyChartPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {activeChannels.map(channel => (
                     <div
-                      key={channel.gates}
+                      key={channel.gates.join('-')}
                       className="p-4 rounded-lg bg-gradient-to-br from-primary/5 to-accent/5 border border-primary/20"
                     >
                       <div className="flex items-center justify-between mb-2">
-                        <Badge className="bg-primary text-xs">{channel.gates}</Badge>
+                        <Badge className="bg-primary text-xs">{channel.gates.join('-')}</Badge>
                         <Badge variant="outline" className="text-xs">{channel.type}</Badge>
                       </div>
                       <h4 className="font-semibold mb-1">{channel.name}</h4>
                       <p className="text-xs text-muted-foreground mb-2">{channel.circuit}</p>
                       <div className="flex gap-1 text-xs text-muted-foreground">
-                        <span>{GATE_NAMES[channel.gate1 as keyof typeof GATE_NAMES]}</span>
+                        <span>{GATE_NAMES[channel.gates[0] as keyof typeof GATE_NAMES]}</span>
                         <span>↔</span>
-                        <span>{GATE_NAMES[channel.gate2 as keyof typeof GATE_NAMES]}</span>
+                        <span>{GATE_NAMES[channel.gates[1] as keyof typeof GATE_NAMES]}</span>
                       </div>
                     </div>
                   ))}
@@ -768,8 +770,8 @@ export default function MyChartPage() {
                         Environment (PHS)
                       </h4>
                       <p className="text-lg font-medium mb-1">{chartData.phs.environment}</p>
-                      {chartData.phs.environmentTone && (
-                        <p className="text-sm text-muted-foreground">Tone: {chartData.phs.environmentTone}</p>
+                      {chartData.phs.environmentalTone && (
+                        <p className="text-sm text-muted-foreground">Tone: {chartData.phs.environmentalTone}</p>
                       )}
                     </div>
                   </div>
@@ -799,20 +801,6 @@ export default function MyChartPage() {
                         <p className="text-sm text-muted-foreground">Tone: {chartData.ravePsychology.perspectiveTone}</p>
                       )}
                     </div>
-
-                    {chartData.ravePsychology.transferred && (
-                      <div className="p-4 rounded-lg bg-muted/30 border border-muted">
-                        <h4 className="font-semibold mb-2">Transferred</h4>
-                        <p className="text-lg font-medium">{chartData.ravePsychology.transferred}</p>
-                      </div>
-                    )}
-
-                    {chartData.ravePsychology.distracted && (
-                      <div className="p-4 rounded-lg bg-muted/30 border border-muted">
-                        <h4 className="font-semibold mb-2">Distracted</h4>
-                        <p className="text-lg font-medium">{chartData.ravePsychology.distracted}</p>
-                      </div>
-                    )}
                   </div>
                 )}
               </CardContent>
