@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, Suspense } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import { Button } from '@/components/ui/button'
@@ -22,6 +22,16 @@ function SignUpForm() {
   const [isLoading, setIsLoading] = useState(false)
   const [showVerificationMessage, setShowVerificationMessage] = useState(false)
   const [userEmail, setUserEmail] = useState('')
+  const [prefillEmail, setPrefillEmail] = useState('')
+  const [prefillPassword, setPrefillPassword] = useState('')
+
+  // Pre-fill email/password from sessionStorage if available
+  useEffect(() => {
+    const storedEmail = sessionStorage.getItem('signupEmail')
+    const storedPassword = sessionStorage.getItem('signupPassword')
+    if (storedEmail) setPrefillEmail(storedEmail)
+    if (storedPassword) setPrefillPassword(storedPassword)
+  }, [])
 
   async function handleSubmit(formData: FormData) {
     setIsLoading(true)
@@ -149,6 +159,7 @@ function SignUpForm() {
                 name="email"
                 type="email"
                 placeholder="you@example.com"
+                defaultValue={prefillEmail}
                 required
                 disabled={isLoading}
                 autoComplete="email"
@@ -161,6 +172,7 @@ function SignUpForm() {
                 name="password"
                 type="password"
                 placeholder="At least 8 characters"
+                defaultValue={prefillPassword}
                 required
                 minLength={8}
                 disabled={isLoading}

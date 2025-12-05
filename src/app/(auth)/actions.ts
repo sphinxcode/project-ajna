@@ -48,9 +48,10 @@ export async function signUp(formData: FormData): Promise<AuthResult> {
     }
   }
 
-  // If auto-confirmed (for development), redirect to dashboard
+  // If auto-confirmed (for development), redirect to homepage
+  // This allows the homepage's useEffect to calculate the chart automatically
   revalidatePath('/', 'layout')
-  redirect('/dashboard')
+  redirect('/')
 }
 
 export async function signIn(formData: FormData): Promise<AuthResult> {
